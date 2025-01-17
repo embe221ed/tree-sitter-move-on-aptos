@@ -5,13 +5,10 @@
   "main": "index.js",
   "types": "bindings/node",
   "scripts": {
-    "test": "tree-sitter test",
-    "parse": "tree-sitter parse",
-    "generate": "tree-sitter generate",
     "install": "node-gyp-build",
-    "prebuildify": "prebuildify --napi --strip",
-    "format": "eslint --fix grammar.js",
-    "format:check": "eslint grammar.js"
+    "prestart": "tree-sitter build --wasm",
+    "start": "tree-sitter playground",
+    "test": "node --test bindings/node/*_test.js"
   },
   "author": "ArArgon <liaozping@gmail.com>",
   "license": "Apache-2.0",

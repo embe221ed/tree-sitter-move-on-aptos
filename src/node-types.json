@@ -2417,6 +2417,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "inline_keyword",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -4040,8 +4050,8 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
-      "required": false,
+      "multiple": true,
+      "required": true,
       "types": [
         {
           "type": "access_field",
@@ -4061,6 +4071,10 @@
         },
         {
           "type": "move_expr",
+          "named": true
+        },
+        {
+          "type": "mutable_keyword",
           "named": true
         },
         {
@@ -5618,6 +5632,10 @@
           "named": true
         },
         {
+          "type": "mutable_keyword",
+          "named": true
+        },
+        {
           "type": "name_access_chain",
           "named": true
         },
@@ -6083,10 +6101,6 @@
     "named": false
   },
   {
-    "type": "&mut",
-    "named": false
-  },
-  {
     "type": "(",
     "named": false
   },
@@ -6327,8 +6341,8 @@
     "named": false
   },
   {
-    "type": "inline",
-    "named": false
+    "type": "inline_keyword",
+    "named": true
   },
   {
     "type": "internal",
@@ -6373,6 +6387,10 @@
   {
     "type": "move",
     "named": false
+  },
+  {
+    "type": "mutable_keyword",
+    "named": true
   },
   {
     "type": "native",

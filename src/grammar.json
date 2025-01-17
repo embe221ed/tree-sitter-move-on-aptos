@@ -116,7 +116,7 @@
     },
     "identifier": {
       "type": "PATTERN",
-      "value": "[a-zA-Z_]\\w*"
+      "value": "(`)?[a-zA-Z_][0-9a-zA-Z_]*(`)?"
     },
     "var_name": {
       "type": "CHOICE",
@@ -168,6 +168,14 @@
           "value": "match"
         }
       ]
+    },
+    "inline_keyword": {
+      "type": "STRING",
+      "value": "inline"
+    },
+    "global_literal": {
+      "type": "PATTERN",
+      "value": "[A-Z_][0-9A-Z_]*"
     },
     "number": {
       "type": "CHOICE",
@@ -809,7 +817,11 @@
           "members": [
             {
               "type": "STRING",
-              "value": "&mut"
+              "value": "&"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "mutable_keyword"
             },
             {
               "type": "FIELD",
@@ -1990,6 +2002,10 @@
         }
       ]
     },
+    "mutable_keyword": {
+      "type": "STRING",
+      "value": "mut"
+    },
     "not_expr": {
       "type": "PREC",
       "value": 13,
@@ -2032,7 +2048,11 @@
         "members": [
           {
             "type": "STRING",
-            "value": "&mut"
+            "value": "&"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "mutable_keyword"
           },
           {
             "type": "SYMBOL",
@@ -5440,8 +5460,8 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "STRING",
-              "value": "inline"
+              "type": "SYMBOL",
+              "name": "inline_keyword"
             },
             {
               "type": "BLANK"

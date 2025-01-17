@@ -123,13 +123,14 @@ module.exports = grammar({
 
         primitive_type: $ => choice($.number_type, 'bool', 'address', 'vector'),
 
-        identifier: _ => /[a-zA-Z_]\w*/,
+        // identifier: _ => /[a-zA-Z_]\w*/,
+        identifier: $ => /(`)?[a-zA-Z_][0-9a-zA-Z_]*(`)?/,
         var_name: $ => choice($.identifier, $.discouraged_name),
         // FIXME: this is a workaround for the existing chaotic naming scheme. Keywords are not supposed to be identifiers.
-        discouraged_name: $ =>
-            choice($.primitive_type, $._quantifier_directive, $._reuseable_keywords),
+        discouraged_name: $ => choice($.primitive_type, $._quantifier_directive, $._reuseable_keywords),
         _reuseable_keywords: _ => choice('for', 'while', 'friend', 'match'),
-
+        inline_keyword: $ => "inline",
+        global_literal: $ => /[A-Z_][0-9A-Z_]*/,
         number: _ =>
             choice(
                 /\d[\d_]*/,
@@ -218,8 +219,11 @@ module.exports = grammar({
                     field('return_type', optional($.type))
                 )
             ),
-        _ref_type: $ =>
-            choice(seq('&', field('ref', $._type)), seq('&mut', field('ref_mut', $._type))),
+        _ref_type: $ => choice(
+            seq('&', field('ref', $._type)),
+            seq('&', $.mutable_keyword, field('ref_mut', $._type)),
+        ),
+
 
         // Parse an expression:
         //      Exp =
@@ -319,12 +323,12 @@ module.exports = grammar({
                 $.deref_expr,
                 $.move_expr,
                 $.copy_expr,
-
                 $._dot_or_index_chain
             ),
+        mutable_keyword: $ => 'mut',
         not_expr: $ => prec(expr_precedence.UNARY, seq('!', $._unary_expr)),
         ref_expr: $ => prec(expr_precedence.UNARY, seq('&', $._unary_expr)),
-        ref_mut_expr: $ => prec(expr_precedence.UNARY, seq('&mut', $._unary_expr)),
+        ref_mut_expr: $ => prec(expr_precedence.UNARY, seq('&', $.mutable_keyword, $._unary_expr)),
         deref_expr: $ => prec(expr_precedence.UNARY, seq('*', $._unary_expr)),
         move_expr: $ => prec(expr_precedence.UNARY, seq('move', field('variable', $.identifier))),
         copy_expr: $ => prec(expr_precedence.UNARY, seq('copy', field('variable', $.identifier))),
@@ -933,7 +937,7 @@ module.exports = grammar({
             ),
         _function_signature: $ =>
             seq(
-                optional('inline'),
+                optional($.inline_keyword),
                 'fun',
                 field('name', $.identifier),
                 field('type_parameters', optional($.type_params)),
@@ -1164,7 +1168,6 @@ module.exports = grammar({
                     token.immediate(prec(1, /.*/))
                 )
             ),
-
         // External scanners are needed to match nested block (doc) comments.
         block_comment: $ =>
             seq(
